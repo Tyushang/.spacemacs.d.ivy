@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     html
      python
      yaml
      ;; ----------------------------------------------------------------
@@ -68,7 +69,10 @@ values."
                                       vimrc-mode
                                       yaml-mode
                                       edit-indirect
-                                      json-mode)
+                                      json-mode
+                                      org-elp
+                                      org-fragtog
+                                      fcitx)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -319,12 +323,13 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;; ________________________________________________________________________________ 
+  ;; ___________________________________________________________________________
   ;; set elpa source.
   (setq configuration-layer--elpa-archives
         '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")
-          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")
+          ("melpa"    . "http://melpa.org/packages/")))
 
   (setq default-directory "~/onedrive/code-snippets/")
   )
@@ -367,7 +372,16 @@ you should place your code here."
   ;; ____________________________
   (setq org-descriptive-links nil)
   ;; ____________________________
+  (setq default-input-method "TeX")
+  ;; ____________________________
   ;; (setq org-image-actual-width '(500))
+
+  ;; ____________________________ evil-normal 自动切换到英文输入法, 详见: https://github.com/cute-jumper/fcitx.el
+  ;; Make sure the following comes before `(fcitx-aggressive-setup)'
+  (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
+  (fcitx-aggressive-setup)
+  (fcitx-prefix-keys-add "M-m") ; M-m is common in Spacemacs
+  ;; (setq fcitx-use-dbus t) ; uncomment if you're using Linux
 
   ;; ____________________________ use-package __________________________________
   ;; (and
@@ -380,6 +394,9 @@ you should place your code here."
   ;; ____________________________
   (use-package json-mode
     :ensure t)
+  ;; ____________________________
+  (use-package fcitx
+    :ensure t)
   ;; ____________________________ M-x package-install to install. don't know how diff with use-package.
   ;; (use-package edit-indirect :ensure t)
   ;; ____________________________
@@ -387,6 +404,16 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
   ;; ____________________________ See: https://github.com/zk-phi/phi-rectangle
   (use-package phi-rectangle :ensure t)
+  ;; ____________________________ See: https://github.com/guanyilun/org-elp
+  (use-package org-elp
+    :config
+    (setq org-elp-idle-time 0.5
+          org-elp-split-fraction 0.25))
+  ;; ____________________________ See: https://github.com/zk-phi/phi-rectangle
+  (use-package org-fragtog
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook 'org-fragtog-mode))
   ;; ____________________________ Hard to Use.
   ;; (use-package vimish-fold
   ;;   :ensure
@@ -485,10 +512,14 @@ you should place your code here."
  '(Info-fontify-angle-bracketed-flag nil)
  '(ansi-color-names-vector
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(desktop-save-mode nil)
  '(global-evil-vimish-fold-mode t)
  '(imenu-list-position 'left)
  '(imenu-list-size 0.2)
  '(markdown-fontify-code-blocks-natively t)
+ '(org-adapt-indentation nil)
+ '(org-agenda-files
+   '("~/onedrive/code-snippets/emacs.org" "~/onedrive/code-snippets/ml-math.org"))
  '(org-cycle-emulate-tab nil)
  '(org-download-heading-lvl nil)
  '(org-download-image-dir "./error-global-org-download-image-dir")
@@ -507,7 +538,7 @@ you should place your code here."
  '(org-image-actual-width nil)
  '(org-list-indent-offset 2)
  '(package-selected-packages
-   '(json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
  '(safe-local-variable-values
    '((org-image-actual-width quote
                              (400))
