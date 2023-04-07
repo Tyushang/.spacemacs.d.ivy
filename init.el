@@ -7,10 +7,15 @@
 You should not put any user code in this function besides modifying the variable
 values."
   (setq-default
+   ;; To solve:
+   ;;     Found 3 orphan package(s) to delete... --> deleting doom-modeline... [3/3]
+   ;; See https://emacs.stackexchange.com/questions/58566/how-to-use-doom-modeline-in-spacemacs
+   dotspacemacs-mode-line-theme '(doom :separator-scale 1.5)
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
    ;; or `spacemacs'. (default 'spacemacs)
    dotspacemacs-distribution 'spacemacs
+
    ;; Lazy installation of layers (i.e. layers are installed only when a file
    ;; with a supported type is opened). Possible values are `all', `unused'
    ;; and `nil'. `unused' will lazy install only unused layers (i.e. layers
@@ -72,7 +77,8 @@ values."
                                       json-mode
                                       org-elp
                                       org-fragtog
-                                      fcitx)
+                                      ;; fcitx
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -325,11 +331,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   ;; ___________________________________________________________________________
   ;; set elpa source.
-  (setq configuration-layer--elpa-archives
-        '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
-          ("org-cn"   . "http://elpa.emacs-china.org/org/")
-          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")
-          ("melpa"    . "http://melpa.org/packages/")))
+  ;; (setq configuration-layer-elpa-archives
+  ;;   '(("melpa-cn" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
+  ;;     ("org-cn"   . "http://mirrors.cloud.tencent.com/elpa/org/")
+  ;;     ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")))
+  (setq configuration-layer-elpa-archives
+        '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+          ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+          ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
 
   (setq default-directory "~/onedrive/code-snippets/")
   )
@@ -378,9 +387,9 @@ you should place your code here."
 
   ;; ____________________________ evil-normal 自动切换到英文输入法, 详见: https://github.com/cute-jumper/fcitx.el
   ;; Make sure the following comes before `(fcitx-aggressive-setup)'
-  (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
-  (fcitx-aggressive-setup)
-  (fcitx-prefix-keys-add "M-m") ; M-m is common in Spacemacs
+  ;; (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
+  ;; (fcitx-aggressive-setup)
+  ;; (fcitx-prefix-keys-add "M-m") ; M-m is common in Spacemacs
   ;; (setq fcitx-use-dbus t) ; uncomment if you're using Linux
 
   ;; ____________________________ use-package __________________________________
@@ -395,8 +404,8 @@ you should place your code here."
   (use-package json-mode
     :ensure t)
   ;; ____________________________
-  (use-package fcitx
-    :ensure t)
+  ;; (use-package fcitx
+  ;;   :ensure t)
   ;; ____________________________ M-x package-install to install. don't know how diff with use-package.
   ;; (use-package edit-indirect :ensure t)
   ;; ____________________________
@@ -448,6 +457,8 @@ you should place your code here."
     (setq doom-modeline-minor-modes nil)
     ;; :hook (after-init . doom-modeline-mode)
     )
+  (use-package all-the-icons
+    :ensure t)
   ;; ____________________________
   (use-package ivy-posframe
     :ensure t
@@ -538,7 +549,7 @@ you should place your code here."
  '(org-image-actual-width nil)
  '(org-list-indent-offset 2)
  '(package-selected-packages
-   '(fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(undo-tree queue spinner org-plus-contrib magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
  '(safe-local-variable-values
    '((org-image-actual-width quote
                              (400))
