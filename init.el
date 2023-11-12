@@ -325,11 +325,26 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   ;; ___________________________________________________________________________
   ;; set elpa source.
-  (setq configuration-layer--elpa-archives
-        '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
-          ("org-cn"   . "http://elpa.emacs-china.org/org/")
-          ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")
-          ("melpa"    . "http://melpa.org/packages/")))
+  ;; 如果是 spacemacs/master 分支, 设置变量 configuration-layer--elpa-archives
+  ;; 如果是 spacemacs/develop 分支, 使用 configuration-layer-elpa-archives 代替原来的 configuration-layer--elpa-archives （ -- 换成 - ）
+  ;; See https://mirrors.tuna.tsinghua.edu.cn/help/elpa/
+  (setq configuration-layer-elpa-archives
+        '(
+          ;; gnu 一般是必备的，其它的 elpa 中的包会依赖 gnu 中的包
+          ("gnu-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+          ;; nongnu 建议启用，类似于 melpa 但是 Emacs 官方维护的
+          ("nongnu-cn"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+          ;; stable-melpa 依据源码的 Tag （Git）升级，数量比 melpa 少，因为很多包作者根本不打 Tag
+          ("stable-melpa-cn"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
+          ;; ;; melpa 滚动升级，收录了的包的数量最大
+          ;; ("melpa-cn"         . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+          ;; ;; org 仅仅为了 org-plus-contrib 这一个包，org 重度用户使用
+          ;; ("org-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+
+          ;; ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
+          ;; ("melpa"    . "http://melpa.org/packages/")
+        )
+  )
 
   (setq default-directory "~/onedrive/code-snippets/")
   )
