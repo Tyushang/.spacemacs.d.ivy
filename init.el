@@ -342,7 +342,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
           ;; ("org-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
 
           ;; ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
-          ;; ("melpa"    . "http://melpa.org/packages/")
+          ;; ("melpa"          . "https://melpa.org/packages/")
+          ;; ("melpa-stable"   . "https://stable.melpa.org/packages/")
+          ;; ("nongnu"         . "https://elpa.nongnu.org/nongnu/")
         )
   )
 
