@@ -329,16 +329,30 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;; ___________________________________________________________________________
-  ;; set elpa source.
-  ;; (setq configuration-layer-elpa-archives
-  ;;   '(("melpa-cn" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
-  ;;     ("org-cn"   . "http://mirrors.cloud.tencent.com/elpa/org/")
-  ;;     ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")))
+  ;; ___________________________Set ELPA Source_________________________________
+  ;; 如果是 spacemacs/master 分支, 设置变量 configuration-layer--elpa-archives
+  ;; 如果是 spacemacs/develop 分支, 使用 configuration-layer-elpa-archives 代替原来的 configuration-layer--elpa-archives （ -- 换成 - ）
+  ;; 如果不是 spacemacs . 应该设置变量 package-archives
+  ;; See https://mirrors.tuna.tsinghua.edu.cn/help/elpa/
   (setq configuration-layer-elpa-archives
-        '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-          ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-          ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+        '(
+          ;; gnu 一般是必备的，其它的 elpa 中的包会依赖 gnu 中的包
+          ("gnu-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+          ;; nongnu 建议启用，类似于 melpa 但是 Emacs 官方维护的
+          ("nongnu-cn"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+          ;; stable-melpa 依据源码的 Tag （Git）升级，数量比 melpa 少，因为很多包作者根本不打 Tag
+          ("stable-melpa-cn"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
+          ;; ;; melpa 滚动升级，收录了的包的数量最大
+          ;; ("melpa-cn"         . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+          ;; ;; org 仅仅为了 org-plus-contrib 这一个包，org 重度用户使用
+          ;; ("org-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+
+          ;; ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
+          ;; ("melpa"          . "https://melpa.org/packages/")
+          ;; ("melpa-stable"   . "https://stable.melpa.org/packages/")
+          ;; ("nongnu"         . "https://elpa.nongnu.org/nongnu/")
+        )
+  )
 
   (setq default-directory "~/onedrive/code-snippets/")
   )
@@ -543,9 +557,6 @@ you should place your code here."
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . default)
      ("\\.pdf\\'" . default)))
- '(org-format-latex-options
-   '(:foreground "Black" :background "grey" :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.5 :matchers
-                 ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(org-image-actual-width nil)
  '(org-list-indent-offset 2)
  '(package-selected-packages
@@ -600,3 +611,96 @@ you should place your code here."
  '(org-level-6 ((t (:height 1.0))))
  '(org-level-7 ((t (:height 1.0))))
  '(org-level-8 ((t (:height 1.0)))))
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(Info-fontify-angle-bracketed-flag nil)
+ '(ansi-color-names-vector
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(desktop-save-mode nil)
+ '(global-evil-vimish-fold-mode t)
+ '(imenu-list-position 'left)
+ '(imenu-list-size 0.2)
+ '(markdown-enable-math t)
+ '(markdown-fontify-code-blocks-natively t)
+ '(org-adapt-indentation nil)
+ '(org-agenda-files
+   '("~/onedrive/code-snippets/emacs.org" "~/onedrive/code-snippets/ml-math.org"))
+ '(org-cycle-emulate-tab nil)
+ '(org-download-heading-lvl nil)
+ '(org-download-image-dir "./error-global-org-download-image-dir")
+ '(org-download-method 'directory)
+ '(org-edit-src-content-indentation 0)
+ '(org-file-apps
+   '(("\\.docx?\\'" . "wps %s")
+     (auto-mode . emacs)
+     (directory . emacs)
+     ("\\.mm\\'" . default)
+     ("\\.x?html?\\'" . default)
+     ("\\.pdf\\'" . default)))
+ '(org-image-actual-width nil)
+ '(org-list-indent-offset 2)
+ '(org-preview-latex-default-process 'dvisvgm)
+ '(org-startup-with-inline-images nil)
+ '(package-selected-packages
+   '(undo-tree queue spinner org-plus-contrib magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
+ '(safe-local-variable-values
+   '((org-image-actual-width quote
+                             (400))
+     (org-image-actual-width quote
+                             (600))
+     (eval setq-local org-download-image-dir
+           (concat
+            (file-name-base
+             (buffer-file-name))
+            ".assets"))))
+ '(smtpmail-smtp-server "smtp.qq.com")
+ '(smtpmail-smtp-service 25)
+ '(yaml-indent-offset 4))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evil-search-highlight-persist-highlight-face ((t (:inherit lazy-highlight :background "LightGoldenrod2" :foreground "black"))))
+ '(font-latex-sectioning-0-face ((t (:height 1.0))))
+ '(font-latex-sectioning-1-face ((t (:height 1.0))))
+ '(font-latex-sectioning-2-face ((t (:height 1.0))))
+ '(font-latex-sectioning-3-face ((t (:height 1.0))))
+ '(font-latex-sectioning-4-face ((t (:height 1.0))))
+ '(font-latex-sectioning-5-face ((t (:height 1.0))))
+ '(font-latex-slide-title-face ((t (:height 1.0))))
+ '(hl-line ((t (:extend t :background "sienna4"))))
+ '(hlt-regexp-level-1 ((t (:background "orange"))))
+ '(info-title-1 ((t (:height 1.0))))
+ '(info-title-2 ((t (:height 1.0))))
+ '(info-title-3 ((t (:height 1.0))))
+ '(info-title-4 ((t (:height 1.0))))
+ '(isearch ((t nil)))
+ '(markdown-blockquote-face ((t (:inherit font-lock-doc-face))))
+ '(markdown-code-face ((t (:inherit fixed-pitch :family "Sarasa Fixed SC"))))
+ '(markdown-header-face ((t (:height 1.0))))
+ '(markdown-header-face-1 ((t (:height 1.0))))
+ '(markdown-header-face-2 ((t (:height 1.0))))
+ '(markdown-header-face-3 ((t (:height 1.0))))
+ '(markdown-header-face-4 ((t (:height 1.0))))
+ '(markdown-header-face-5 ((t (:height 1.0))))
+ '(markdown-header-face-6 ((t (:height 1.0))))
+ '(mode-line ((t (:background "#222226" :foreground "#b2b2b2" :box (:line-width 1 :color "#5d4d7a") :height 129 :foundry "yahei" :family "consolas"))))
+ '(org-document-title ((t (:height 1.0))))
+ '(org-level-1 ((t (:height 1.0))))
+ '(org-level-2 ((t (:height 1.0))))
+ '(org-level-3 ((t (:height 1.0))))
+ '(org-level-4 ((t (:height 1.0))))
+ '(org-level-5 ((t (:height 1.0))))
+ '(org-level-6 ((t (:height 1.0))))
+ '(org-level-7 ((t (:height 1.0))))
+ '(org-level-8 ((t (:height 1.0)))))
+)
