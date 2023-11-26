@@ -1,6 +1,6 @@
-* Emacs
-- [install emacs28 on ubuntu]https://ubuntuhandbook.org/index.php/2022/06/install-gnu-emacs-28-1-ubuntu-22-04-20-04/
-- [install emacs on WSL2]https://www.bhw.name/assets/blog/installation-of-spacemacs.html
+Refer
+- [[https://ubuntuhandbook.org/index.php/2022/06/install-gnu-emacs-28-1-ubuntu-22-04-20-04/][install emacs28 on ubuntu]]
+- [[https://www.bhw.name/assets/blog/installation-of-spacemacs.html][install emacs on WSL2]]
 
 * 部署 Emacs for Windows
 - 从 release 下载部署包;
@@ -19,12 +19,12 @@
         - 安装了 NerdFontsSymbolsOnly 之后是否不需要 all-the-icons 了? 如果还需要就安装 all-the-icons 字体;
     - =ag-2020-07-05_2.2.0-58-g5a1c8d8-x64.zip= : 包含 ag.exe 工具, 若 =.emacs.d/bin= 中没有 ag.exe, 请将其解压过去;
     - =spacemacs-develop.zip= : 从 spacemacs 官网下载的配置程序, 对应 =.emacs.d= ;
-- 安装 Latex 支持. 详见 [[如何安装 Latex 支持]] ;
-- 安装 Bash 支持, 详见 [[如何安装 Bash 支持(for Windows)]] ;
+- 安装 Latex 支持. 详见 [[id:0562c32c-387b-443b-b420-a00bebb2fe0b][HOWTO/如何安装 Latex 支持]] ;
+- 安装 Bash 支持, 详见 [[id:10b66c08-c902-4a71-bfdd-ec078ee04f92][HOWTO/如何安装 Bash 支持(for Windows)]] ;
 - 设置 =default-directory= , Windows 推荐使用 Shortcut 属性 =Start In= 来设置;
 
 * 从头安装 Emacs
-- Use emacs v28.1 ::
+- Use emacs v28.1 , 其他版本可能出现更多的问题.
     #+begin_src shell
     # Method 1) Use snap. See https://snapcraft.io/emacs
     sudo snap install emacs --channel=28.x/stable --classic
@@ -39,12 +39,12 @@
     sudo apt remove --autoremove emacs28 emacs28-common
     sudo add-apt-repository --remove ppa:kelleyk/emacs
     #+end_src
-- set env $HOME (for windows) ::
-- Makedir $HOME/onedrive/code-snippets ::
+- set env =HOME= (for Windows) .
+- Makedir =$HOME/onedrive/code-snippets=
     #+begin_src shell
     mkdir -p ~/onedrive/code-snippets  # for linux
     #+end_src
-- install sarasa font ::
+- Install Sarasa Font:
     - Windows 可以直接在 AppStore 中安装;
     - Ubuntu 按照如下方式安装:
       #+begin_src shell
@@ -52,34 +52,40 @@
       cd /usr/share/fonts   # 切换到字体目录？
       sudo mkfontscale && sudo mkfontdir && sudo fc-cache -fv  # mkfont* 命令似乎不重要?
       #+end_src
-- install all-the-icons fonts ::
+- Install all-the-icons Fonts
     - See https://github.com/domtronn/all-the-icons.el
     - See https://emacs-china.org/t/widows-spacemacs-doom-line-manual-install-all-the-icons-install-fonts/13613
     - 若不安装, doom-modeline 的 icons 会乱码.
-    - 安装方法: 直接将 [[https://github.com/domtronn/all-the-icons.el/tree/master/fonts][all-the-icons fonts]] 文件拖到 settings -> 个性化 -> 字体 -> 添加字体 里面.
-    #+begin_src shell
-    # 使用 M-x all-the-icons-install-fonts 安装字体的时候, 很可能连接不上 github . 此时可以手动安装:
-    git clone https://github.com/domtronn/all-the-icons.el
-    cp -rf ./all-the-icons/fonts /usr/share/fonts/all-the-icons  # shell 会创建文件夹 /usr/share/fonts/all-the-icons
-    sudo fc-cache -fv
-    #+end_src
-- install nerd fonts :: doom-modeline 改为使用 nerd-fonts 来显示 icon (之前使用 all-the-icons), 若不安装, doom-modeline 中的 icon 会显示乱码;
+    - 对于 Windows, 直接将 [[https://github.com/domtronn/all-the-icons.el/tree/master/fonts][all-the-icons fonts]] 文件拖到 settings -> 个性化 -> 字体 -> 添加字体 里面.
+    - 对于 Ubuntu, 可以使用如下方法:
+      #+begin_src shell
+      # 使用 M-x all-the-icons-install-fonts 安装字体的时候, 很可能连接不上 github . 此时可以手动安装:
+      git clone https://github.com/domtronn/all-the-icons.el
+      cp -rf ./all-the-icons/fonts /usr/share/fonts/all-the-icons  # shell 会创建文件夹 /usr/share/fonts/all-the-icons
+      sudo fc-cache -fv
+      #+end_src
+- Install Nerd Fonts
+    - doom-modeline 改为使用 nerd-fonts 来显示 icon (之前使用 all-the-icons), 若不安装, doom-modeline 中的 icon 会显示乱码;
     - 到官网搜索"Symbols Only"下载, 官网地址: https://www.nerdfonts.com/font-downloads
-    - [Symbols Only 字体下载地址]https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/NerdFontsSymbolsOnly.zip
-- Make .emacs.d :: 官方推荐使用 spacemacs devolop 分支(而非 master 分支, 说是维护的很慢);
+    - 或者直接从 [[https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/NerdFontsSymbolsOnly.zip][Symbols Only 字体下载地址]] 下载;
+- Make =$HOME/.emacs.d=
+    - 官方推荐使用 spacemacs devolop 分支(而非 master 分支, 说是维护的很慢);
     #+begin_src shell
     git clone --branch develop https://github.com/syl20bnr/spacemacs $HOME/.emacs.d
     # checkout to 72bc84de9f83322ca5ac4b554ba9069e570df368
     #+end_src
-- Make .spacemacs.d ::
+- Make =$HOME/.spacemacs.d=
     #+begin_src shell
     # 如果是 ubuntu 版本, 就使用 master 分支;
     git clone --branch windows git@github.com:Tyushang/.spacemacs.d.ivy.git $HOME/.spacemacs.d
     #+end_src
-- 更换 ELPA 源以加快安装包下载速度(如果需要的话). 详见: [[如何更换 ELPA 源]]
+- 更换 ELPA 源以加快安装包下载速度(如果需要的话). 详见:[[id:920f7cf8-0338-42c5-83e9-372086963a4b][HOWTO/如何更换 ELPA 源]] ;
 
 * HOWTO
 ** 如何更换 ELPA 源
+:PROPERTIES:
+:ID:       920f7cf8-0338-42c5-83e9-372086963a4b
+:END:
 - See https://mirrors.tuna.tsinghua.edu.cn/help/elpa/
 #+begin_src elisp
 ;; vim .emacs.d/init.el , 添加如下代码:
@@ -113,8 +119,11 @@
 #+end_src
 
 ** 如何安装 Latex 支持
-- []https://orgmode.org/worg/org-tutorials/org-latex-preview.html
-- [详见]file://./emacs.org
+:PROPERTIES:
+:ID:       0562c32c-387b-443b-b420-a00bebb2fe0b
+:END:
+- See https://orgmode.org/worg/org-tutorials/org-latex-preview.html
+- See [[file://./emacs.org]]
 - windows 建议安装 miktex . 直接下载安装包, 比 texlive-full 方便的多;
     - [miktex 下载地址]https://miktex.org/download
     - 建议以管理员方式运行安装程序, 为所有用户安装 miktex . 为单个用户安装的未尝试;
@@ -129,6 +138,9 @@
       但是 emacs 在这个目录中进行一些操作的时候会出问题, 将上述两个变量设置为 =~/cache/= 就好了.
 
 ** 如何安装 Bash 支持(for Windows)
+:PROPERTIES:
+:ID:       10b66c08-c902-4a71-bfdd-ec078ee04f92
+:END:
 - 在 Windows 中安装 msys2/git/... 之类的 bash-模拟器;
 - 将 bash-模拟器 的 bash-dir(放置 bash 命令的目录) 添加到 Windows 全局环境变量 Path 中;
     - 比如 =msys2 bash-dir: C:\msys64\usr\bin=, =git bash-dir: C:\Program Files\Git\usr\bin=
