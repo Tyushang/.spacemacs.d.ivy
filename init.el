@@ -36,8 +36,9 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     html
-     python
+     ;; autohotkey
+     ;; html
+     ;; python
      yaml
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -47,8 +48,8 @@ values."
      ivy
      ;; auto-completion
      ;; better-defaults
-     ;; emacs-lisp
-     git
+     emacs-lisp
+     ;; git
      markdown
      org
      ;; (shell :variables
@@ -61,7 +62,6 @@ values."
      ;; user added:
      (theming :variables
               theming-headings-same-size 'all)
-
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -69,15 +69,14 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(ivy-posframe
                                       imenu-list
-                                      doom-modeline
                                       phi-rectangle
                                       vimrc-mode
                                       yaml-mode
-                                      edit-indirect
+                                      ;; edit-indirect
                                       json-mode
                                       org-elp
                                       org-fragtog
-                                      ;; fcitx
+                                      fcitx
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -127,22 +126,26 @@ values."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading nil
+   ;; dotspacemacs-verbose-loading nil
+   dotspacemacs-verbose-loading t
+
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   ;; dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner 'random
+
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
    ;; `recents' `bookmarks' `projects' `agenda' `todos'."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((recents . 10)
-                                (projects . 5))
+   ;; dotspacemacs-startup-lists '((recents . 10)
+   ;;                              (projects . 5))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -150,13 +153,13 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         atom-dark
-                         doom-one
-                         doom-acario-dark
-                         doom-solarized-dark
-                         doom-vibrant
-                         spacemacs-light)
+   dotspacemacs-themes '(
+                         ;; Use `:location local', Or spacemacs will try to install the theme everytime at startup.
+                         (vscode-dark-plus :location local)
+                         spacemacs-dark
+                         doom-dark+
+                         )
+
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -165,7 +168,9 @@ values."
                                :size 20
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               ;; :powerline-scale 1.1
+                               )
+
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -174,7 +179,7 @@ values."
    ;; The key used for Vim Ex commands (default ":")
    dotspacemacs-ex-command-key ":"
    ;; The leader key accessible in `emacs state' and `insert state'
-   ;; (default "M-m")
+   ;; (default "M-m"
    dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
@@ -329,32 +334,65 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+
+  ;; ______________________________Set Proxy____________________________________
+  ;; (setq url-gateway-method 'socks)
+  ;; (setq socks-server '("Default server" "127.0.0.1" 1080 5))
+
+  ;; (setq url-proxy-services
+  ;;       '(("https" . "127.0.0.1:12333")
+  ;;         ("http"  . "127.0.0.1:12333")
+  ;;         ;; socks not working, @see url-default-find-proxy-for-url
+  ;;         ;; ("socks5" . "localhost:1080")
+  ;;         ))
   ;; ___________________________Set ELPA Source_________________________________
   ;; 如果是 spacemacs/master 分支, 设置变量 configuration-layer--elpa-archives
   ;; 如果是 spacemacs/develop 分支, 使用 configuration-layer-elpa-archives 代替原来的 configuration-layer--elpa-archives （ -- 换成 - ）
   ;; 如果不是 spacemacs . 应该设置变量 package-archives
-  ;; See https://mirrors.tuna.tsinghua.edu.cn/help/elpa/
   (setq configuration-layer-elpa-archives
         '(
-          ;; gnu 一般是必备的，其它的 elpa 中的包会依赖 gnu 中的包
-          ("gnu-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-          ;; nongnu 建议启用，类似于 melpa 但是 Emacs 官方维护的
-          ("nongnu-cn"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-          ;; stable-melpa 依据源码的 Tag （Git）升级，数量比 melpa 少，因为很多包作者根本不打 Tag
-          ("stable-melpa-cn"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
+          ;; 清华源: See https://mirrors.tuna.tsinghua.edu.cn/help/elpa/
+          ;; ;; gnu 一般是必备的，其它的 elpa 中的包会依赖 gnu 中的包
+          ;; ("gnu-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+          ;; ;; nongnu 建议启用，类似于 melpa 但是 Emacs 官方维护的
+          ;; ("nongnu-cn"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
           ;; ;; melpa 滚动升级，收录了的包的数量最大
           ;; ("melpa-cn"         . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
           ;; ;; org 仅仅为了 org-plus-contrib 这一个包，org 重度用户使用
           ;; ("org-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+          ;; ;; stable-melpa 依据源码的 Tag （Git）升级，数量比 melpa 少，因为很多包作者根本不打 Tag
+          ;; ("stable-melpa-cn"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
 
-          ;; ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
+          ;; ;; 中国源: See https://elpamirror.emacs-china.org/
+          ;; ("melpa-cn" . "http://1.15.88.122/melpa/")
+          ;; ("gnu-cn"   . "http://1.15.88.122/gnu/")
+          ;; ("org-cn"   . "http://1.15.88.122/org/")
+
+          ;; 腾讯源: See https://mirrors.tencent.com/help/elpa.html
+          ("melpa-cn" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
+          ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
+          ("org-cn"   . "http://mirrors.cloud.tencent.com/elpa/org/")
+
+          ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
           ;; ("melpa"          . "https://melpa.org/packages/")
-          ;; ("melpa-stable"   . "https://stable.melpa.org/packages/")
           ;; ("nongnu"         . "https://elpa.nongnu.org/nongnu/")
+          ;; ("melpa-stable"   . "https://stable.melpa.org/packages/")
         )
   )
 
-  (setq default-directory "~/onedrive/code-snippets/")
+  ;; ;; CANNOT put this line in dotspacemacs/usr-config ?  Use windows shortcut property `Start In' to set this value!
+  ;; (setq default-directory "~/onedrive/code-snippets/")
+
+  ;; My theme dir.
+  (setq custom-theme-directory "~/.spacemacs.d/custom_themes")
+
+  ;; Also, make sure fcitx-remote is in your PATH and exec-path. If not, use the following code in your init.el:
+  (let ((fcitx-path "~/.emacs.d/bin"))
+    (setenv "PATH" (concat fcitx-path ";" (getenv "PATH")))
+    (add-to-list 'exec-path fcitx-path))
+
+  ;; To Fix: spacemacs 启动时显示：Package cl is deprecated
+  (setq byte-compile-warnings '(cl-functions))
   )
 
 (defun dotspacemacs/user-config ()
@@ -364,26 +402,6 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  ;; _________________________ mode-line related _______________________________
-  ;; (setq powerline-default-separator 'slant)
-  ;; (setq powerline-height 27)
-  ;; (set-face-attribute 'mode-line nil  :height 125) ;; :fontsizes 200)
-  ;; (set-face-attribute 'mode-line-buffer-id nil :height 125) ;;  :fontsizes 200)
-
-  ;; ___________________________________________________________________________
-  ;; to solve the problem that ivy-switch-buffer can not distinguish same filename. not tested.
-  ;; (require 'uniquify)
-  ;; (setq uniquify-buffer-name-style 'forward)
-
-  ;; ____________________________ key-bindings _________________________________
-  (global-unset-key (kbd "C-SPC"))
-  (global-set-key (kbd "<f7>") 'ivy-switch-buffer)
-  (global-set-key (kbd "<C-tab>") 'next-buffer)
-  (with-eval-after-load 'evil
-    (define-key evil-motion-state-map (kbd "g l") 'evil-end-of-line)
-    (define-key evil-motion-state-map (kbd "g h") 'evil-beginning-of-line)
-    ;; (define-key evil-motion-state-map (kbd "<C-tab>") 'evil-next-buffer)
-    )
   ;; ________________________________ setq _____________________________________
   (setq org-latex-create-formula-image-program 'dvisvgm)
   (setq org-preview-latex-image-directory "~/cache/latex-image/")
@@ -399,32 +417,55 @@ you should place your code here."
   ;; ____________________________
   ;; (setq org-image-actual-width '(500))
 
-  ;; ____________________________ evil-normal 自动切换到英文输入法, 详见: https://github.com/cute-jumper/fcitx.el
+  ;; ___________________________________________________________________________
+  ;; To Fix: the problem that ivy-switch-buffer can not distinguish same filename. not tested.
+  ;; (require 'uniquify)
+  ;; (setq uniquify-buffer-name-style 'forward)
+
+  ;; ____________________________ evil-normal 自动切换到英文输入法, See: https://github.com/cute-jumper/fcitx.el
+  (use-package fcitx
+    :ensure t)
   ;; Make sure the following comes before `(fcitx-aggressive-setup)'
-  ;; (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
-  ;; (fcitx-aggressive-setup)
-  ;; (fcitx-prefix-keys-add "M-m") ; M-m is common in Spacemacs
+  (setq fcitx-active-evil-states '(insert emacs hybrid)) ; if you use hybrid mode
+  (fcitx-aggressive-setup)
+  (fcitx-prefix-keys-add "M-m") ; M-m is common in Spacemacs
   ;; (setq fcitx-use-dbus t) ; uncomment if you're using Linux
 
+  ;; ;; Copy from `fcitx-aggressive-setup'
+  ;; ;; enable prefix-keys feature
+  ;; (fcitx-prefix-keys-turn-off)
+  ;; ;; enable read-* function support
+  ;; (fcitx-read-funcs-turn-off)
+  ;; ;; ;; enable evil-related features
+  ;; ;; (fcitx-evil-turn-on)
+  ;; ;; disable fcitx in minibuffer
+  ;; (fcitx-aggressive-minibuffer-turn-off)
+  ;; ;; enable org-speed-command support
+  ;; (fcitx-org-speed-command-turn-off)
+
+  ;; (setq fcitx-prefix-keys-polling-time 0.001)
+
   ;; ____________________________ use-package __________________________________
-  ;; (and
-  ;;  (require 'centered-cursor-mode)
-  ;;  (global-centered-cursor-mode +1))
+  ;; ;; ____________________________
+  ;; (use-package vscode-dark-plus-theme
+  ;;   :ensure t)
   ;; ____________________________
   (use-package vimrc-mode
-    :ensure t)
-  (add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
+    )
   ;; ____________________________
   (use-package json-mode
     :ensure t)
-  ;; ____________________________
-  ;; (use-package fcitx
-  ;;   :ensure t)
   ;; ____________________________ M-x package-install to install. don't know how diff with use-package.
   ;; (use-package edit-indirect :ensure t)
   ;; ____________________________
-  (use-package yaml-mode :ensure t)
-  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+  (use-package yaml-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+    )
   ;; ____________________________ See: https://github.com/zk-phi/phi-rectangle
   (use-package phi-rectangle :ensure t)
   ;; ____________________________ See: https://github.com/guanyilun/org-elp
@@ -432,29 +473,34 @@ you should place your code here."
     :config
     (setq org-elp-idle-time 0.5
           org-elp-split-fraction 0.25))
-  ;; ____________________________ See: https://github.com/zk-phi/phi-rectangle
+  ;; ____________________________ See: https://github.com/io12/org-fragtog
   (use-package org-fragtog
     :ensure t
     :config
-    (add-hook 'org-mode-hook 'org-fragtog-mode))
-  ;; ____________________________ Hard to Use.
-  ;; (use-package vimish-fold
-  ;;   :ensure
-  ;;   :after evil)
-  ;; (use-package evil-vimish-fold
-  ;;   :ensure
-  ;;   :after vimish-fold
-  ;;   :hook ((prog-mode conf-mode text-mode) . evil-vimish-fold-mode))
-  ;; ____________________________
+    (add-hook 'org-mode-hook 'org-fragtog-mode)
+    (add-hook 'markdown-mode-hook 'org-fragtog-mode)
+    )
+  ;; ____________________________ See: https://github.com/bmag/imenu-list
+  (use-package imenu-list
+    :ensure t
+    :bind (("C-\"" . imenu-list-smart-toggle))
+    :bind (("<S-return>" . imenu-list-display-entry))
+    :config
+    (setq imenu-list-focus-after-activation t
+          imenu-list-auto-resize nil)
+    (imenu-list-smart-toggle)  ;; WTF!!! Toggle twice to let doom-modeline know!
+    (imenu-list-smart-toggle)  ;; Otherwise, doom-modeline CANNOT render imenu-list's modeline.
+    )
+  ;; ____________________________ See: https://github.com/seagle0128/doom-modeline
   (use-package doom-modeline
     :ensure t
     :config
     (doom-modeline-mode 1)
     (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
     ;; How tall the mode-line should be (only respected in GUI Emacs).
-    (setq doom-modeline-height 25)
+    (setq doom-modeline-height 26)
     ;; How wide the mode-line bar should be (only respected in GUI Emacs).
-    (setq doom-modeline-bar-width 3)
+    (setq doom-modeline-bar-width 1)  ;; 0 is INVALID!
     ;; Whether display icons in mode-line or not.
     (setq doom-modeline-icon t)
     ;; Whether display the icon for major mode. It respects `doom-modeline-icon'.
@@ -469,30 +515,28 @@ you should place your code here."
     (setq doom-modeline-buffer-modification-icon t)
     ;; Whether display minor modes in mode-line or not.
     (setq doom-modeline-minor-modes nil)
-    ;; :hook (after-init . doom-modeline-mode)
+    ;; :hook (after-init . doom-modeline-mode)  ;; CANNOT render imenu-list's modeline alone.
     )
-  (use-package all-the-icons
-    :ensure t)
-  ;; ____________________________
+  ;; ____________________________ See: https://github.com/tumashu/ivy-posframe
   (use-package ivy-posframe
     :ensure t
     :config
     (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
     (ivy-posframe-mode 1)
     )
-  ;; ____________________________
+  ;; ____________________________ See: https://github.com/emacs-evil/evil-surround
   (use-package evil-surround
     :ensure t
     :config
     (global-evil-surround-mode 1))
-  ;; ____________________________
-  (use-package imenu-list
-    :ensure t
-    :bind (("C-\"" . imenu-list-smart-toggle))
-    :bind (("<S-return>" . imenu-list-display-entry))
-    :config
-    (setq imenu-list-focus-after-activation t
-          imenu-list-auto-resize nil))
+  ;; ____________________________ Hard to Use.
+  ;; (use-package vimish-fold
+  ;;   :ensure
+  ;;   :after evil)
+  ;; (use-package evil-vimish-fold
+  ;;   :ensure
+  ;;   :after vimish-fold
+  ;;   :hook ((prog-mode conf-mode text-mode) . evil-vimish-fold-mode))
   ;; ___________________________
   ;; Chinese and English fonts alignment
   ;; (use-package cnfonts
@@ -524,6 +568,24 @@ you should place your code here."
   ;;   (awesome-tab-mode t))
   ;; (setq awesome-tab-label-fixed-length 10)
   ;; (setq awesome-tab-height 150)
+
+  ;; _________________________________HOOK______________________________________
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-c C-x C-u") 'markdown-toggle-url-hiding)
+              (local-set-key (kbd "C-c C-x C-l") 'org-latex-preview)
+              (local-set-key (kbd "C-c C-x C-v") 'markdown-toggle-inline-images)
+              ))
+
+  ;; ____________________________ key-bindings _________________________________
+  (global-unset-key (kbd "C-SPC"))
+  (global-set-key (kbd "<f7>") 'ivy-switch-buffer)
+  (global-set-key (kbd "<C-tab>") 'next-buffer)
+  (with-eval-after-load 'evil
+    (define-key evil-motion-state-map (kbd "g l") 'evil-end-of-line)
+    (define-key evil-motion-state-map (kbd "g h") 'evil-beginning-of-line)
+    ;; (define-key evil-motion-state-map (kbd "<C-tab>") 'evil-next-buffer)
+    )
 
   )
 
@@ -624,10 +686,15 @@ This function is called at the very end of Spacemacs initialization."
  '(Info-fontify-angle-bracketed-flag nil)
  '(ansi-color-names-vector
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(custom-enabled-themes '(vscode-dark-plus))
+ '(custom-safe-themes
+   '("631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" "b194290f97b32989529a03b315c769d03e64eed675b7f57500357d6cc8ae6f01" "c517e98fa036a0c21af481aadd2bdd6f44495be3d4ac2ce9d69201fcb2578533" "ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" "3da4d7317a707d720dcc332565510fc5631d3637fe10b046b2373af705b6042b" "6395575116fccbcc921a7134c3da729795fdf018660e56d901514410a5ad9c26" default))
+ '(debug-on-error nil)
  '(desktop-save-mode nil)
  '(global-evil-vimish-fold-mode t)
  '(imenu-list-position 'left)
  '(imenu-list-size 0.2)
+ '(ls-lisp-use-insert-directory-program t)
  '(markdown-enable-math t)
  '(markdown-fontify-code-blocks-natively t)
  '(org-adapt-indentation nil)
@@ -650,7 +717,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-preview-latex-default-process 'dvisvgm)
  '(org-startup-with-inline-images nil)
  '(package-selected-packages
-   '(undo-tree queue spinner org-plus-contrib magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(counsel-ag-popup ahk-mode undo-tree queue spinner org-plus-contrib magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
  '(safe-local-variable-values
    '((org-image-actual-width quote
                              (400))
