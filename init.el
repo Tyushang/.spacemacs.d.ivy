@@ -77,6 +77,7 @@ values."
                                       org-elp
                                       org-fragtog
                                       fcitx
+                                      powershell
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -144,8 +145,8 @@ values."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   ;; dotspacemacs-startup-lists '((recents . 10)
-   ;;                              (projects . 5))
+   dotspacemacs-startup-lists '((recents . 12)
+                                (projects . 6))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -449,6 +450,9 @@ you should place your code here."
   ;; ;; ____________________________
   ;; (use-package vscode-dark-plus-theme
   ;;   :ensure t)
+  ;; ____________________________ See: https://github.com/jschaf/powershell.el.git
+  (use-package powershell
+    :ensure t)
   ;; ____________________________
   (use-package vimrc-mode
     :ensure t

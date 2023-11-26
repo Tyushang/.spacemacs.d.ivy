@@ -4,24 +4,35 @@ Refer
 
 * 部署 Emacs for Windows
 - 从 release 下载部署包;
-- 在 Windows 上设置环境变量 HOME (emacs 根据这个变量查找配置文件);
-- 将部署包中的 emacs-28.1.zip 解压到 =$HOME/= ;
-- 将部署包中的 space+emacs.d.win11.vx.zip 中的内容解压到 =$HOME/= , 其中:
+- 在 Windows 上设置环境变量 =HOME= (emacs 根据这个变量查找配置程序和文件);
+
+- 将部署包中的 =00_emacs-28.1.zip= 解压到 =$HOME/= ;
+- 将部署包中的 =01_space+emacs.d.win11.vx.tar.gz= 中的内容解压到 =$HOME/= , 其中:
     - =.emacs.d= 是 [[https://github.com/syl20bnr/spacemacs.git][spacemacs]] 配置程序,
       是原版 spacemacs 加上使用 emacs 过程中安装的 packages (也可以直接从 github 上拉取);
     - =.spacemacs.d= 是 spacemacs 的配置文件, 是用户配置的主体, 也是本工程对应的文件夹(也可以直接从 github 上拉取);
-- 安装 sarasa 字体(本地文件存于 =$部署包/sarasa-gothic-ttf-0.42.5.7z=), 不用全部解压(体积太大), 安装自己需要的就行;
+- 安装 sarasa 字体(离线文件存于 =$部署包/02_sarasa-gothic-ttf-0.42.5.7z=), 不用全部解压(体积太大), 安装自己需要的就行;
     - 推荐安装: =sarasa-fixed-sc-xxx.ttf= , =sarasa-term-sc-xxx.ttf=
     - 也可以直接从 Windows AppStore 安装 sarasa 字体;
-- 安装 NerdFontsSymbolsOnly 字体(本地文件存于 =$部署包/NerdFontsSymbolsOnly.zip=);
+- 安装 NerdFontsSymbolsOnly 字体(离线文件存于 =$部署包/03_NerdFontsSymbolsOnly.zip=);
+- 安装 ag 支持(离线文件存于 =05_ag-2020-07-05_2.2.0-58-g5a1c8d8-x64.zip=): 若 =.emacs.d/bin= 中没有 ag.exe, 请将其解压过去;
 - 其他文件:
-    - =all-the-icons.el= : 包含 all-the-icons 字体(位于: =all-the-icons.el\fonts=), 其他的不重要;
+    - =04_all-the-icons.el= : 包含 all-the-icons 字体(位于: =all-the-icons.el\fonts=), 其他的不重要;
         - 安装了 NerdFontsSymbolsOnly 之后是否不需要 all-the-icons 了? 如果还需要就安装 all-the-icons 字体;
-    - =ag-2020-07-05_2.2.0-58-g5a1c8d8-x64.zip= : 包含 ag.exe 工具, 若 =.emacs.d/bin= 中没有 ag.exe, 请将其解压过去;
-    - =spacemacs-develop.zip= : 从 spacemacs 官网下载的配置程序, 对应 =.emacs.d= ;
+    - =01_spacemacs-develop.zip= : 从 spacemacs 官网下载的配置程序, 对应 =.emacs.d= . 用于排查问题;
+    - =fcitx-remote= : [[https://github.com/Tyushang/fcitx-remote-for-windows11][fcitx-remote-for-windows]] release 的 exe 文件;
+
 - 安装 Latex 支持. 详见 [[id:0562c32c-387b-443b-b420-a00bebb2fe0b][HOWTO/如何安装 Latex 支持]] ;
 - 安装 Bash 支持, 详见 [[id:10b66c08-c902-4a71-bfdd-ec078ee04f92][HOWTO/如何安装 Bash 支持(for Windows)]] ;
 - 设置 =default-directory= , Windows 推荐使用 Shortcut 属性 =Start In= 来设置;
+
+- 附: 打包 =spacemacs.d + emacs.d= 的命令(可以在 Git Bash 上执行)
+    #+begin_src bash
+    tar --exclude=".emacs.d/.cache" \
+        --exclude=".emacs.d/eln-cache" \
+        --exclude=".spacemacs.d/.spacemacs.env" \
+        -cvzf archive.tar.gz .emacs.d .spacemacs.d
+    #+end_src
 
 * 从头安装 Emacs
 - Use emacs v28.1 , 其他版本可能出现更多的问题.
