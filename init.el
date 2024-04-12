@@ -771,6 +771,7 @@ This function is called at the very end of Spacemacs initialization."
  '(markdown-header-face-5 ((t (:height 1.0))))
  '(markdown-header-face-6 ((t (:height 1.0))))
  '(mode-line ((t (:background "#222226" :foreground "#b2b2b2" :box (:line-width 1 :color "#5d4d7a") :height 129 :foundry "yahei" :family "consolas"))))
+ '(org-code ((t (:foreground "tomato"))))
  '(org-document-title ((t (:height 1.0))))
  '(org-level-1 ((t (:height 1.0))))
  '(org-level-2 ((t (:height 1.0))))
