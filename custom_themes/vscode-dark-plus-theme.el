@@ -176,14 +176,15 @@
    ;; `(org-level-2                              ((,class (:bold nil :foreground ,ms-lightblue))))
    ;; `(org-level-3                              ((,class (:bold nil :foreground ,ms-blue))))
    ;; `(org-level-4                              ((,class (:bold nil :foreground ,ms-bluegreen))))
+   ;; `(org-code                                 ((,class (:foreground ,ms-orange))))
    ;; ________________________________________________________________________________
    `(org-level-1                              ((,class (:bold t :foreground ,ms-bluegreen
                                                               ,@(when vscode-dark-plus-scale-org-faces (list :height 1.1))))))
    `(org-level-2                              ((,class (:bold t :foreground ,ms-lightblue))))
    `(org-level-3                              ((,class (:bold t :foreground ,ms-blue))))
    `(org-level-4                              ((,class (:bold t :foreground ,ms-bluegreen))))
+   `(org-code                                 ((,class (:foreground "tomato"))))
    ;; >>>>>>>>>>>>>>>>>>>>>>>>>Frank Modi... End>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-   `(org-code                                 ((,class (:foreground ,ms-orange))))
    `(org-hide                                 ((,class (:foreground ,fg4))))
    `(org-date                                 ((,class (:underline t :foreground ,var) )))
    `(org-footnote                             ((,class (:underline t :foreground ,fg4))))
