@@ -35,7 +35,7 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(html
      ;; autohotkey
      ;; html
      ;; python
@@ -48,8 +48,8 @@ values."
      ivy
      ;; auto-completion
      ;; better-defaults
-     emacs-lisp
-     git
+     ;; emacs-lisp
+     ;; git
      markdown
      org
      ;; (shell :variables
@@ -392,6 +392,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (setenv "PATH" (concat fcitx-path ";" (getenv "PATH")))
     (add-to-list 'exec-path fcitx-path))
 
+  ;; ;; Set python path.
+  ;; (let ((python-path "C:\\Users\\frank\\anaconda3"))
+  ;;   (setenv "PATH" (concat python-path ";" (getenv "PATH")))
+  ;;   (add-to-list 'exec-path python-path))
+
   ;; To Fix: spacemacs 启动时显示：Package cl is deprecated
   (setq byte-compile-warnings '(cl-functions))
   )
@@ -404,8 +409,21 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   ;; ________________________________ setq _____________________________________
-  (setq org-latex-create-formula-image-program 'dvisvgm)
+  ;; ____________________________ latex related
+  ;; - set org-preview-latex-default-process to select default process, dvipng, dvisvgm or imagemagick;
+  ;; - customize variable org-preview-latex-process-alist to adjust the size of latex fragments.
   (setq org-preview-latex-image-directory "~/cache/latex-image/")
+
+  ;; - Set org-html-mathjax-options.path to "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js".
+  ;;    Origin path is an old version. This has been done by customization.
+  ;; - Tell mathjax to include physics package when export to html.
+  (setq org-html-head "
+<link rel=\"stylesheet\" type=\"text/css\" href=\"./custom.css\">
+<script type=\"text/javascript\">
+    window.MathJax = {tex: {packages: {'[+]': ['base', 'physics']}}, loader: {load: ['[tex]/physics']}};
+</script>
+  ")
+
   ;; ____________________________
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil)
@@ -422,6 +440,11 @@ you should place your code here."
   ;; To Fix: the problem that ivy-switch-buffer can not distinguish same filename. not tested.
   ;; (require 'uniquify)
   ;; (setq uniquify-buffer-name-style 'forward)
+
+  ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+  ;; (require 'eaf)
+  ;; (require 'eaf-org-previewer)
+  ;; (require 'eaf-markdown-previewer)
 
   ;; ____________________________ evil-normal 自动切换到英文输入法, See: https://github.com/cute-jumper/fcitx.el
   (use-package fcitx
@@ -722,12 +745,47 @@ This function is called at the very end of Spacemacs initialization."
      ("\\.mm\\'" . default)
      ("\\.x?html?\\'" . default)
      ("\\.pdf\\'" . default)))
+ '(org-html-mathjax-options
+   '((path "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js")
+     (scale "100")
+     (align "center")
+     (font "TeX")
+     (linebreaks "false")
+     (autonumber "AMS")
+     (indent "0em")
+     (multlinewidth "85%")
+     (tagindent ".8em")
+     (tagside "right")))
  '(org-image-actual-width nil)
  '(org-list-indent-offset 2)
- '(org-preview-latex-default-process 'dvisvgm)
+ '(org-preview-latex-process-alist
+   '((dvipng :programs
+             ("latex" "dvipng")
+             :description "dvi > png" :message "you need to install the programs: latex and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
+             (1.46 . 1.32)
+             :latex-compiler
+             ("latex -interaction nonstopmode -output-directory %o %f")
+             :image-converter
+             ("dvipng -D %D -T tight -o %O %f"))
+     (dvisvgm :programs
+              ("latex" "dvisvgm")
+              :description "dvi > svg" :message "you need to install the programs: latex and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
+              (1.7 . 1.5)
+              :latex-compiler
+              ("latex -interaction nonstopmode -output-directory %o %f")
+              :image-converter
+              ("dvisvgm %f -n -b min -c %S -o %O"))
+     (imagemagick :programs
+                  ("latex" "convert")
+                  :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
+                  (1.0 . 1.0)
+                  :latex-compiler
+                  ("pdflatex -interaction nonstopmode -output-directory %o %f")
+                  :image-converter
+                  ("convert -density %D -trim -antialias %f -quality 100 %O"))))
  '(org-startup-with-inline-images nil)
  '(package-selected-packages
-   '(counsel-ag-popup undo-tree queue spinner org-plus-contrib magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(add-node-modules-path company-web web-completion-data counsel-css flycheck pkg-info epl helm-css-scss helm helm-core impatient-mode simple-httpd prettier-js web-beautify undo-tree queue spinner org-plus-contrib magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
  '(safe-local-variable-values
    '((org-image-actual-width quote
                              (400))
