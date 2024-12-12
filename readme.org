@@ -183,6 +183,11 @@ Refer
 [[https://github.com/ggreer/the_silver_searcher][ag 官网]] 下载 ag.exe 并放置于 emacs 执行目录下(emacs 变量 =exec-path= 列出的目录).
 这里我使用 =~/.emacs.d/bin= 目录;
 
+** 如何在 Windows 中使用 markdown preview (by pandoc) 功能?
+- 安装 pandoc , 并将 pandoc.exe 所在目录添加到环境变量 ~PATH~ 中(emacs 可能不会立即更新 ~PATH~ , 此时可以重启电脑来解决);
+- 设置 ~markdown-command~ 变量: ~(setq markdown-command "pandoc")~ , 告诉 emacs 我们使用 pandoc.exe 来转换 markdown 文件;
+- 在 markdown mode 中, 使用 ~C-c C-c v~ 或者 ~M-x: markdown-export-and-preview~ 生成 html 文件并预览(更多 ~markdown command~ 请参考 ~C-c C-c~);
+
 ** 如何在 Windows 中如何使用 Server-Client 模式?
 - https://emacs.stackexchange.com/questions/35545/setting-up-emacsclient-on-ms-windows
 

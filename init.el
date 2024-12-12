@@ -399,6 +399,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   ;; To Fix: spacemacs 启动时显示：Package cl is deprecated
   (setq byte-compile-warnings '(cl-functions))
+
+  ;; Use pandoc to convert markdown file.
+  ;; You need to install pandoc first, then add path where pandoc.exe is located to env PATH.
+  (setq markdown-command "pandoc")
   )
 
 (defun dotspacemacs/user-config ()
