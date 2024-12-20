@@ -374,7 +374,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
           ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
           ("org-cn"   . "http://mirrors.cloud.tencent.com/elpa/org/")
 
-          ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
+          ;; ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
           ;; ("melpa"          . "https://melpa.org/packages/")
           ;; ("nongnu"         . "https://elpa.nongnu.org/nongnu/")
           ;; ("melpa-stable"   . "https://stable.melpa.org/packages/")
@@ -609,6 +609,51 @@ you should place your code here."
               (local-set-key (kbd "C-c C-x C-v") 'markdown-toggle-inline-images)
               ))
 
+  ;; ________________________ Image Paste Function
+  (defun save-clipboard-image (savepath)
+  (let* ((command (format "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;
+            if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {
+                $image = [System.Windows.Forms.Clipboard]::GetImage();
+                [System.Drawing.Bitmap]$image.Save('%s', [System.Drawing.Imaging.ImageFormat]::Png);
+                if (Test-Path '%s') {
+                    Write-Output '0'
+                } else {
+                    Write-Output '-2'
+                }
+            } else {
+                Write-Output '-1'
+            }\"" savepath savepath))
+         (output (string-trim (shell-command-to-string command))))
+    (cond
+     ((string= output "0") (progn (message "Clipboard image saved as %s" savepath) 0))
+     ((string= output "-1") (progn (message "No image in clipboard.") -1))
+     ((string= output "-2") (progn (message "Write image error.") -2))
+     (t (progn (message "Unknown error: %s" output) -3)))))
+
+  (defun my-image-paste (basename)
+    "Capture a screenshot from the clipboard and save it with the specified `basename'.
+If `basename' is empty, generate a default name."
+
+    (interactive "sEnter basename(without extension. Enter directly to auto generate): ")
+    ;; 检查 org-download-image-dir 目录是否存在. Wait for user choice if NOT.
+    (unless (file-exists-p org-download-image-dir)
+      (if (y-or-n-p (format "Directory '%s' does not exist. Create it?" org-download-image-dir))
+          (make-directory org-download-image-dir t)
+        (error "Operation cancelled by user.")))
+
+    (let* ((basename (if (string-empty-p basename) (format-time-string "%Y%m%d_%H%M%S")))
+           (savepath (concat org-download-image-dir "/" basename ".png"))
+           (result (save-clipboard-image savepath)))
+      (cond ((= result 0)
+             (insert "#+ATTR_HTML: :WIDTH \n") ;; 插入属性行
+             (insert (concat "[[file:" savepath "]]")) ;; 插入图片链接
+             (org-display-inline-images)))))
+
+  (global-set-key (kbd "C-S-v") 'my-image-paste)
+  (global-set-key (kbd "C-S-d") 'org-download-delete)
+
+  (setq org-download-screenshot-method 'save-clipboard-image)
+
   ;; ____________________________ key-bindings _________________________________
   (global-unset-key (kbd "C-SPC"))
   (global-set-key (kbd "<f7>") 'ivy-switch-buffer)
@@ -642,8 +687,6 @@ you should place your code here."
  '(imenu-list-size 0.2)
  '(markdown-fontify-code-blocks-natively t)
  '(org-adapt-indentation nil)
- '(org-agenda-files
-   '("~/onedrive/code-snippets/emacs.org" "~/onedrive/code-snippets/ml-math.org"))
  '(org-cycle-emulate-tab nil)
  '(org-download-heading-lvl nil)
  '(org-download-image-dir "./error-global-org-download-image-dir")
@@ -728,6 +771,7 @@ This function is called at the very end of Spacemacs initialization."
    '("631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" "b194290f97b32989529a03b315c769d03e64eed675b7f57500357d6cc8ae6f01" "c517e98fa036a0c21af481aadd2bdd6f44495be3d4ac2ce9d69201fcb2578533" "ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" "3da4d7317a707d720dcc332565510fc5631d3637fe10b046b2373af705b6042b" "6395575116fccbcc921a7134c3da729795fdf018660e56d901514410a5ad9c26" default))
  '(debug-on-error nil)
  '(desktop-save-mode nil)
+ '(dired-sidebar-display-alist '((side . right) (slot . -1)))
  '(global-evil-vimish-fold-mode t)
  '(imenu-list-position 'left)
  '(imenu-list-size 0.2)
@@ -735,8 +779,7 @@ This function is called at the very end of Spacemacs initialization."
  '(markdown-enable-math t)
  '(markdown-fontify-code-blocks-natively t)
  '(org-adapt-indentation nil)
- '(org-agenda-files
-   '("~/onedrive/code-snippets/emacs.org" "~/onedrive/code-snippets/ml-math.org"))
+ '(org-agenda-files nil)
  '(org-cycle-emulate-tab nil)
  '(org-download-heading-lvl nil)
  '(org-download-image-dir "./error-global-org-download-image-dir")
