@@ -641,7 +641,7 @@ If `basename' is empty, generate a default name."
           (make-directory org-download-image-dir t)
         (error "Operation cancelled by user.")))
 
-    (let* ((basename (if (string-empty-p basename) (format-time-string "%Y%m%d_%H%M%S")))
+    (let* ((basename (if (string-empty-p basename) (format-time-string "%Y%m%d_%H%M%S") basename))
            (savepath (concat org-download-image-dir "/" basename ".png"))
            (result (save-clipboard-image savepath)))
       (cond ((= result 0)
@@ -656,18 +656,77 @@ If `basename' is empty, generate a default name."
 
   ;; ____________________________ key-bindings _________________________________
   (global-unset-key (kbd "C-SPC"))
-  (global-set-key (kbd "<f7>") 'ivy-switch-buffer)
   (global-set-key (kbd "<C-tab>") 'next-buffer)
   (with-eval-after-load 'evil
     (define-key evil-motion-state-map (kbd "g l") 'evil-end-of-line)
     (define-key evil-motion-state-map (kbd "g h") 'evil-beginning-of-line)
     ;; (define-key evil-motion-state-map (kbd "<C-tab>") 'evil-next-buffer)
+
     )
+  (evil-define-key nil 'global (kbd "C-e") 'ivy-switch-buffer)  ; follow eclipse convention.
 
   ;; The variable org-emphasis-alist is not defined until org-mode is loaded
   ;; See https://emacs.stackexchange.com/questions/44081/how-to-tweak-org-emphasis-alist-to-put-e-g-neon-yellow-over-bold-or-italic
   (add-to-list 'org-emphasis-alist
                '("*" (bold :foreground "LightGoldenrod1")))
+
+  ;; ;; ____________________________ Table Color __________________________________
+  ;; (defface pos-decimal-face
+  ;;   '((t :foreground "red"))
+  ;;   "Indicates something positive")
+
+  ;; (defface neg-decimal-face
+  ;;   '((t (:foreground "green")))
+  ;;   "Indicates something negative")
+
+  ;; (defface integer-face
+  ;;   '((t (:foreground "tan")))
+  ;;   "Indicates something integer")
+
+  ;; (defun ek/match-pos-decimal (limit)
+  ;;   (let (result)
+  ;;     (while
+  ;;         (progn
+  ;;           (when (looking-back "|" 1)
+  ;;             (backward-char))
+  ;;           (setq result (re-search-forward "|\\( *[0-9,_]+\\.[0-9%]+ *\\)|" limit t))
+  ;;           (save-match-data
+  ;;             (and result (not (looking-back "^ *|.*"))))))
+  ;;     result))
+
+  ;; (defun ek/match-neg-dicimal (limit)
+  ;;   (let (result)
+  ;;     (while
+  ;;         (progn
+  ;;           (when (looking-back "|")
+  ;;             (backward-char))
+  ;;           (setq result (re-search-forward "|\\( *- *[0-9,_]+\\.[0-9%]+ *\\)|" limit t))
+  ;;           (save-match-data
+  ;;             (and result (not (looking-back "^ *|.*"))))))
+  ;;     result))
+
+  ;; (defun ek/match-integer (limit)
+  ;;   (let (result)
+  ;;     (while
+  ;;         (progn
+  ;;           (when (looking-back "|")
+  ;;             (backward-char))
+  ;;           (setq result (re-search-forward "|\\( *[0-9,_]+ *\\)|" limit t))
+  ;;           (save-match-data
+  ;;             (and result (not (looking-back "^ *|.*"))))))
+  ;;     result))
+
+  ;; (font-lock-add-keywords 'org-mode
+  ;;                         '((ek/match-pos-decimal 1 'pos-decimal-face t))
+  ;;                         'append)
+
+  ;; (font-lock-add-keywords 'org-mode
+  ;;                         '((ek/match-neg-dicimal 1 'neg-decimal-face t))
+  ;;                         'append)
+
+  ;; (font-lock-add-keywords 'org-mode
+  ;;                         '((ek/match-integer 1 'integer-face t))
+  ;;                         'append)
 
 )
 
