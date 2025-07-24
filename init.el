@@ -166,7 +166,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Sarasa Fixed SC"
-                               :size 20
+                               :size 16
                                :weight normal
                                :width normal
                                ;; :powerline-scale 1.1
@@ -335,6 +335,10 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  ;; ______________________________Config Bash__________________________________
+  (setq shell-file-name "C:/Program Files/Git/bin/bash.exe")
+  (setq explicit-shell-file-name shell-file-name)
+  (setq explicit-bash.exe-args '("--login" "-i"))
 
   ;; ______________________________Set Proxy____________________________________
   ;; (setq url-gateway-method 'socks)
@@ -403,7 +407,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Use pandoc to convert markdown file.
   ;; You need to install pandoc first, then add path where pandoc.exe is located to env PATH.
   (setq markdown-command "pandoc")
-  )
+
+  )  ;; ______________________________ End of user-init()
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -655,6 +660,7 @@ If `basename' is empty, generate a default name."
   (setq org-download-screenshot-method 'save-clipboard-image)
 
   ;; ____________________________ key-bindings _________________________________
+  (global-set-key (kbd "C-;") 'org-time-stamp-inactive)  ; Follow excel convention;
   (global-unset-key (kbd "C-SPC"))
   (global-set-key (kbd "<C-tab>") 'next-buffer)
   (with-eval-after-load 'evil
@@ -663,72 +669,19 @@ If `basename' is empty, generate a default name."
     ;; (define-key evil-motion-state-map (kbd "<C-tab>") 'evil-next-buffer)
 
     )
-  (evil-define-key nil 'global (kbd "C-e") 'ivy-switch-buffer)  ; follow eclipse convention.
+  (evil-define-key '(normal insert visual) 'global (kbd "C-e") 'ivy-switch-buffer)  ; Follow eclipse convention.
 
   ;; The variable org-emphasis-alist is not defined until org-mode is loaded
   ;; See https://emacs.stackexchange.com/questions/44081/how-to-tweak-org-emphasis-alist-to-put-e-g-neon-yellow-over-bold-or-italic
   (add-to-list 'org-emphasis-alist
                '("*" (bold :foreground "LightGoldenrod1")))
 
-  ;; ;; ____________________________ Table Color __________________________________
-  ;; (defface pos-decimal-face
-  ;;   '((t :foreground "red"))
-  ;;   "Indicates something positive")
+  ;; ;; ____________________________ Config babel
+  ;; (org-babel-do-load-languages
+  ;;  'org-babel-load-languages
+  ;;  '((sh . t)))
 
-  ;; (defface neg-decimal-face
-  ;;   '((t (:foreground "green")))
-  ;;   "Indicates something negative")
-
-  ;; (defface integer-face
-  ;;   '((t (:foreground "tan")))
-  ;;   "Indicates something integer")
-
-  ;; (defun ek/match-pos-decimal (limit)
-  ;;   (let (result)
-  ;;     (while
-  ;;         (progn
-  ;;           (when (looking-back "|" 1)
-  ;;             (backward-char))
-  ;;           (setq result (re-search-forward "|\\( *[0-9,_]+\\.[0-9%]+ *\\)|" limit t))
-  ;;           (save-match-data
-  ;;             (and result (not (looking-back "^ *|.*"))))))
-  ;;     result))
-
-  ;; (defun ek/match-neg-dicimal (limit)
-  ;;   (let (result)
-  ;;     (while
-  ;;         (progn
-  ;;           (when (looking-back "|")
-  ;;             (backward-char))
-  ;;           (setq result (re-search-forward "|\\( *- *[0-9,_]+\\.[0-9%]+ *\\)|" limit t))
-  ;;           (save-match-data
-  ;;             (and result (not (looking-back "^ *|.*"))))))
-  ;;     result))
-
-  ;; (defun ek/match-integer (limit)
-  ;;   (let (result)
-  ;;     (while
-  ;;         (progn
-  ;;           (when (looking-back "|")
-  ;;             (backward-char))
-  ;;           (setq result (re-search-forward "|\\( *[0-9,_]+ *\\)|" limit t))
-  ;;           (save-match-data
-  ;;             (and result (not (looking-back "^ *|.*"))))))
-  ;;     result))
-
-  ;; (font-lock-add-keywords 'org-mode
-  ;;                         '((ek/match-pos-decimal 1 'pos-decimal-face t))
-  ;;                         'append)
-
-  ;; (font-lock-add-keywords 'org-mode
-  ;;                         '((ek/match-neg-dicimal 1 'neg-decimal-face t))
-  ;;                         'append)
-
-  ;; (font-lock-add-keywords 'org-mode
-  ;;                         '((ek/match-integer 1 'integer-face t))
-  ;;                         'append)
-
-)
+)  ;; ______________________________ End of user-config()
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -827,7 +780,7 @@ This function is called at the very end of Spacemacs initialization."
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(custom-enabled-themes '(vscode-dark-plus))
  '(custom-safe-themes
-   '("631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" "b194290f97b32989529a03b315c769d03e64eed675b7f57500357d6cc8ae6f01" "c517e98fa036a0c21af481aadd2bdd6f44495be3d4ac2ce9d69201fcb2578533" "ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" "3da4d7317a707d720dcc332565510fc5631d3637fe10b046b2373af705b6042b" "6395575116fccbcc921a7134c3da729795fdf018660e56d901514410a5ad9c26" default))
+   '("38c0c668d8ac3841cb9608522ca116067177c92feeabc6f002a27249976d7434" "badd1a5e20bd0c29f4fe863f3b480992c65ef1fa63951f59aa5d6b129a3f9c4c" "6adeb971e4d5fe32bee0d5b1302bc0dfd70d4b42bad61e1c346599a6dc9569b5" "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8" "dccf4a8f1aaf5f24d2ab63af1aa75fd9d535c83377f8e26380162e888be0c6a9" "8c7e832be864674c220f9a9361c851917a93f921fedb7717b1b5ece47690c098" "e1f4f0158cd5a01a9d96f1f7cdcca8d6724d7d33267623cc433fe1c196848554" "75b2a02e1e0313742f548d43003fcdc45106553af7283fb5fad74359e07fe0e2" "8d3ef5ff6273f2a552152c7febc40eabca26bae05bd12bc85062e2dc224cde9a" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "02d422e5b99f54bd4516d4157060b874d14552fe613ea7047c4a5cfa1288cf4f" "7964b513f8a2bb14803e717e0ac0123f100fb92160dcf4a467f530868ebaae3e" "a44e2d1636a0114c5e407a748841f6723ed442dc3a0ed086542dc71b92a87aee" "631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" "b194290f97b32989529a03b315c769d03e64eed675b7f57500357d6cc8ae6f01" "c517e98fa036a0c21af481aadd2bdd6f44495be3d4ac2ce9d69201fcb2578533" "ab2cbf30ab758c5e936b527377d543ce4927001742f79519b62c45ba9dd9f55e" "3da4d7317a707d720dcc332565510fc5631d3637fe10b046b2373af705b6042b" "6395575116fccbcc921a7134c3da729795fdf018660e56d901514410a5ad9c26" default))
  '(debug-on-error nil)
  '(desktop-save-mode nil)
  '(dired-sidebar-display-alist '((side . right) (slot . -1)))
@@ -891,9 +844,16 @@ This function is called at the very end of Spacemacs initialization."
                   ("convert -density %D -trim -antialias %f -quality 100 %O"))))
  '(org-startup-with-inline-images nil)
  '(package-selected-packages
-   '(add-node-modules-path company-web web-completion-data counsel-css flycheck pkg-info epl helm-css-scss helm helm-core impatient-mode simple-httpd prettier-js web-beautify undo-tree queue spinner org-plus-contrib magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(add-node-modules-path company-web web-completion-data counsel-css flycheck pkg-info epl helm-css-scss helm helm-core impatient-mode simple-httpd prettier-js web-beautify undo-tree queue spinner magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
  '(safe-local-variable-values
-   '((org-image-actual-width quote
+   '((eval font-lock-add-keywords nil
+           '(("\\(| [0-9-]+ | [0-9:]+ | [^|]+ | \\)B\\( |\\)" 3
+              '(:foreground "red")
+              prepend)
+             ("\\(| [0-9-]+ | [0-9:]+ | [^|]+ | \\)S\\( |\\)" 3
+              '(:foreground "green")
+              prepend)))
+     (org-image-actual-width quote
                              (400))
      (org-image-actual-width quote
                              (600))
@@ -925,6 +885,7 @@ This function is called at the very end of Spacemacs initialization."
  '(info-title-3 ((t (:height 1.0))))
  '(info-title-4 ((t (:height 1.0))))
  '(isearch ((t nil)))
+ '(lazy-highlight ((t (:background "light slate blue" :foreground "black"))))
  '(markdown-blockquote-face ((t (:inherit font-lock-doc-face))))
  '(markdown-code-face ((t (:inherit fixed-pitch :family "Sarasa Fixed SC"))))
  '(markdown-header-face ((t (:height 1.0))))
