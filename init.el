@@ -335,11 +335,6 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;; ______________________________Config Bash__________________________________
-  (setq shell-file-name "C:/Program Files/Git/bin/bash.exe")
-  (setq explicit-shell-file-name shell-file-name)
-  (setq explicit-bash.exe-args '("--login" "-i"))
-
   ;; ______________________________Set Proxy____________________________________
   ;; (setq url-gateway-method 'socks)
   ;; (setq socks-server '("Default server" "127.0.0.1" 1080 5))
@@ -422,6 +417,12 @@ you should place your code here."
   ;; - set org-preview-latex-default-process to select default process, dvipng, dvisvgm or imagemagick;
   ;; - customize variable org-preview-latex-process-alist to adjust the size of latex fragments.
   (setq org-preview-latex-image-directory "~/cache/latex-image/")
+
+  ;; ______________________________Config Bash__________________________________
+  ;; 不能放在 user-init() 里面; 否则生成 .spacemacs.env 时, 会将 HOME=/c/home. 导致路径出错; FUCK!
+  (setq shell-file-name "C:\\Program Files\\Git\\bin\\bash.exe")
+  (setq explicit-shell-file-name shell-file-name)
+  (setq explicit-bash.exe-args '("--login" "-i"))
 
   ;; - Set org-html-mathjax-options.path to "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js".
   ;;    Origin path is an old version. This has been done by customization.
