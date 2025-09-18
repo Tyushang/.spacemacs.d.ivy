@@ -77,6 +77,8 @@ values."
                                       org-elp
                                       org-fragtog
                                       fcitx
+                                      pyim
+                                      pyim-basedict
                                       powershell
                                       )
    ;; A list of packages that cannot be updated.
@@ -335,6 +337,11 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+
+  ;; ;; ________________________________ PinYin Search ____________________________
+  ;; ;; 让 / 使用 isearch 后端（务必在 pyim 之前设置）
+  ;; (setq evil-search-module 'isearch)
+
   ;; ______________________________Set Proxy____________________________________
   ;; (setq url-gateway-method 'socks)
   ;; (setq socks-server '("Default server" "127.0.0.1" 1080 5))
@@ -351,32 +358,33 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; 如果不是 spacemacs . 应该设置变量 package-archives
   (setq configuration-layer-elpa-archives
         '(
-          ;; 清华源: See https://mirrors.tuna.tsinghua.edu.cn/help/elpa/
+          ;; ;; 清华源: See https://mirrors.tuna.tsinghua.edu.cn/help/elpa/
           ;; ;; gnu 一般是必备的，其它的 elpa 中的包会依赖 gnu 中的包
           ;; ("gnu-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
           ;; ;; nongnu 建议启用，类似于 melpa 但是 Emacs 官方维护的
           ;; ("nongnu-cn"        . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
           ;; ;; melpa 滚动升级，收录了的包的数量最大
           ;; ("melpa-cn"         . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-          ;; ;; org 仅仅为了 org-plus-contrib 这一个包，org 重度用户使用
-          ;; ("org-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-          ;; ;; stable-melpa 依据源码的 Tag （Git）升级，数量比 melpa 少，因为很多包作者根本不打 Tag
-          ;; ("stable-melpa-cn"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
+          ;; ;; ;; org 仅仅为了 org-plus-contrib 这一个包，org 重度用户使用
+          ;; ;; ("org-cn"           . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
+          ;; ;; ;; stable-melpa 依据源码的 Tag （Git）升级，数量比 melpa 少，因为很多包作者根本不打 Tag
+          ;; ;; ("stable-melpa-cn"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
 
           ;; ;; 中国源: See https://elpamirror.emacs-china.org/
           ;; ("melpa-cn" . "http://1.15.88.122/melpa/")
           ;; ("gnu-cn"   . "http://1.15.88.122/gnu/")
           ;; ("org-cn"   . "http://1.15.88.122/org/")
 
-          ;; 腾讯源: See https://mirrors.tencent.com/help/elpa.html
-          ("melpa-cn" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
-          ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
-          ("org-cn"   . "http://mirrors.cloud.tencent.com/elpa/org/")
+          ;; ;; 腾讯源: See https://mirrors.tencent.com/help/elpa.html
+          ;; ("melpa-cn" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
+          ;; ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
+          ;; ("org-cn"   . "http://mirrors.cloud.tencent.com/elpa/org/")
 
-          ;; ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
-          ;; ("melpa"          . "https://melpa.org/packages/")
-          ;; ("nongnu"         . "https://elpa.nongnu.org/nongnu/")
-          ;; ("melpa-stable"   . "https://stable.melpa.org/packages/")
+          ;; 有些时候需要从官方源安装包, 否则安装的包会出一些莫名其妙的错误.
+          ("melpa"  . "https://melpa.org/packages/")
+          ("gnu"    . "https://elpa.gnu.org/packages/")
+          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+          ("org"    . "https://orgmode.org/elpa/")
         )
   )
 
@@ -418,12 +426,17 @@ you should place your code here."
   ;; - customize variable org-preview-latex-process-alist to adjust the size of latex fragments.
   (setq org-preview-latex-image-directory "~/cache/latex-image/")
 
-  ;; ______________________________Config Bash__________________________________
+  ;; _____________________________ Config Bash _________________________________
   ;; 不能放在 user-init() 里面; 否则生成 .spacemacs.env 时, 会将 HOME=/c/home. 导致路径出错; FUCK!
   (setq shell-file-name "C:\\Program Files\\Git\\bin\\bash.exe")
   (setq explicit-shell-file-name shell-file-name)
   (setq explicit-bash.exe-args '("--login" "-i"))
+  (let ((dir "C:/Program Files/Git/usr/bin"))
+    (add-to-list 'exec-path dir)
+    (setenv "PATH" (concat dir ";" (getenv "PATH")))
+    (setq epg-gpg-program (concat dir "/gpg.exe")))
 
+  ;; ___________________________________________________________________________
   ;; - Set org-html-mathjax-options.path to "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js".
   ;;    Origin path is an old version. This has been done by customization.
   ;; - Tell mathjax to include physics package when export to html.
@@ -480,6 +493,7 @@ you should place your code here."
   ;; (setq fcitx-prefix-keys-polling-time 0.001)
 
   ;; ____________________________ use-package __________________________________
+
   ;; ;; ____________________________
   ;; (use-package vscode-dark-plus-theme
   ;;   :ensure t)
@@ -567,47 +581,27 @@ you should place your code here."
     :ensure t
     :config
     (global-evil-surround-mode 1))
-  ;; ____________________________ Hard to Use.
-  ;; (use-package vimish-fold
-  ;;   :ensure
-  ;;   :after evil)
-  ;; (use-package evil-vimish-fold
-  ;;   :ensure
-  ;;   :after vimish-fold
-  ;;   :hook ((prog-mode conf-mode text-mode) . evil-vimish-fold-mode))
-  ;; ___________________________
-  ;; Chinese and English fonts alignment
-  ;; (use-package cnfonts
-  ;;   :config
-  ;;   (cnfonts-enable)
-  ;;   ;; (setq cnfonts-use-face-font-rescale t)
-  ;;   )
-  ;; __________________________
-  ;; (use-package benchmark-init
-  ;;   :ensure t
-  ;;   :config
-  ;;   ;; To disable collection of benchmark data after init is done.
-  ;;   (add-hook 'after-init-hook 'benchmark-init/deactivate))
-  ;; _________________________
-  ;; (use-package helm-posframe
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq helm-posframe-poshandler
-  ;;         #'posframe-poshandler-window-center)
-  ;;   (setq helm-posframe-width 100)
-  ;;   (helm-posframe-enable)
-  ;;   (global-set-key (kbd "M-x") 'helm-M-x)
-  ;;  )
-  ;; ________________________
-  ;; (use-package awesome-tab
-  ;;   ;; :ensure t
-  ;;   :load-path "/home/frank/.spacemacs.d/files-to-load/"
-  ;;   :config
-  ;;   (awesome-tab-mode t))
-  ;; (setq awesome-tab-label-fixed-length 10)
-  ;; (setq awesome-tab-height 150)
 
-  ;; _________________________________HOOK______________________________________
+  ;; ____________________________ key-bindings _________________________________
+  (global-unset-key (kbd "C-SPC"))  ;; DONT response Ctrl+Space which is input-method switching.
+
+  ;; All My(Comtom) Hotkeys are with prefix `C-c m' , m for my.
+
+  (global-set-key (kbd "C-;") 'org-time-stamp-inactive)  ; Follow excel convention;
+  (global-set-key (kbd "<C-tab>") 'next-buffer)
+  ;; (with-eval-after-load 'evil
+  ;;   (define-key evil-motion-state-map (kbd "g l") 'evil-end-of-line)
+  ;;   (define-key evil-motion-state-map (kbd "g h") 'evil-beginning-of-line)
+  ;;   ;; (define-key evil-motion-state-map (kbd "<C-tab>") 'evil-next-buffer)
+  ;;   )
+  (evil-define-key '(normal insert visual) 'global (kbd "C-e") 'ivy-switch-buffer)  ; Follow eclipse convention.
+  ;; ____________________________ Expand / Contract(Shrink) Region
+  (global-set-key (kbd "M-P") 'er/expand-region)    ; Follow eclipse convention But substitute <Up> with p.
+  (global-set-key (kbd "M-N") 'er/contract-region)  ; Follow eclipse convention But substitute <Donw> with n.
+  ;; ____________________________ Goto Line
+  (global-set-key (kbd "C-l") 'avy-goto-line)
+
+  ;; ________________________________ HOOK _____________________________________
   (add-hook 'markdown-mode-hook
             (lambda ()
               (local-set-key (kbd "C-c C-x C-u") 'markdown-toggle-url-hiding)
@@ -616,7 +610,7 @@ you should place your code here."
               ))
 
   ;; ________________________ Image Paste Function
-  (defun save-clipboard-image (savepath)
+  (defun my/save-clipboard-image (savepath)
   (let* ((command (format "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;
             if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {
                 $image = [System.Windows.Forms.Clipboard]::GetImage();
@@ -636,7 +630,9 @@ you should place your code here."
      ((string= output "-2") (progn (message "Write image error.") -2))
      (t (progn (message "Unknown error: %s" output) -3)))))
 
-  (defun my-image-paste (basename)
+  (setq org-download-screenshot-method 'my/save-clipboard-image)
+
+  (defun my/image-paste (basename)
     "Capture a screenshot from the clipboard and save it with the specified `basename'.
 If `basename' is empty, generate a default name."
 
@@ -649,38 +645,69 @@ If `basename' is empty, generate a default name."
 
     (let* ((basename (if (string-empty-p basename) (format-time-string "%Y%m%d_%H%M%S") basename))
            (savepath (concat org-download-image-dir "/" basename ".png"))
-           (result (save-clipboard-image savepath)))
+           (result (my/save-clipboard-image savepath)))
       (cond ((= result 0)
              (insert "#+ATTR_HTML: :WIDTH \n") ;; 插入属性行
              (insert (concat "[[file:" savepath "]]")) ;; 插入图片链接
              (org-display-inline-images)))))
 
-  (global-set-key (kbd "C-S-v") 'my-image-paste)
-  (global-set-key (kbd "C-S-d") 'org-download-delete)
+  (global-set-key (kbd "C-c m i p") 'my/image-paste)        ;; C-c m is My prefix, i for image, p for paste.
+  (global-set-key (kbd "C-c m i d") 'org-download-delete)   ;; C-c m is My prefix, i for image, d for delete.
 
-  (setq org-download-screenshot-method 'save-clipboard-image)
+  ;; ____________________________ PinYin Search
+  (use-package pyim :ensure t)
+  (use-package pyim-cregexp
+    :after pyim
+    :commands (pyim-cregexp-build))
 
-  ;; ____________________________ key-bindings _________________________________
-  (global-set-key (kbd "C-;") 'org-time-stamp-inactive)  ; Follow excel convention;
-  (global-unset-key (kbd "C-SPC"))
-  (global-set-key (kbd "<C-tab>") 'next-buffer)
-  (with-eval-after-load 'evil
-    (define-key evil-motion-state-map (kbd "g l") 'evil-end-of-line)
-    (define-key evil-motion-state-map (kbd "g h") 'evil-beginning-of-line)
-    ;; (define-key evil-motion-state-map (kbd "<C-tab>") 'evil-next-buffer)
+  (defvar my/pinyin-search-enabled          t    "是否启用拼音搜索功能。t 为启用，nil 为禁用。")
+  (defvar my/pinyin-search-min-length       2    "首字母长度小于此值时不触发扩展。")
+  (defvar my/pinyin-search-max-regex-length 8192 "生成正则超过该长度则放弃（防止卡顿）。")
 
-    )
-  (evil-define-key '(normal insert visual) 'global (kbd "C-e") 'ivy-switch-buffer)  ; Follow eclipse convention.
+  (defun my/toggle-pinyin-search ()
+    "切换拼音搜索功能的启用状态。"
+    (interactive)
+    (setq my/pinyin-search-enabled (not my/pinyin-search-enabled))
+    (message "拼音搜索功能已 %s" (if my/pinyin-search-enabled "启用" "禁用")))
 
+  (defvar my/pinyin-search-cache (make-hash-table :test 'equal) "缓存：首字母 -> 展开后的正则。")
+  (defun my/pinyin-search--build (abbr)
+    "返回 abbr 的正则（使用缓存），超过 512 条时自动清空。"
+    ;; 检查缓存大小, 超过限制则清空, 防止缓存无限增长.
+    (when (>= (hash-table-count my/pinyin-search-cache) 512)
+      (clrhash my/pinyin-search-cache)
+      (message "[pinyin cache] cleared due to exceeding size limit"))
+    ;; 若缓冲命中, 返回缓存结果; 否则返回 pyim-cregexp-build 生成的 regex
+    (or (gethash abbr my/pinyin-search-cache)
+        (let* ((regex (pyim-cregexp-build abbr t)))
+          (when (> (length regex) my/pinyin-search-max-regex-length)
+            (user-error "拼音展开正则过大（%d）: %s..." (length regex) (substring regex 0 120)))
+          (puthash abbr regex my/pinyin-search-cache)
+          regex)))
+
+  (defun my/evil-ex-make-pattern--pinyin (orig string &optional whole case-fold)
+    "带前缀的首字母拼音扩展。"
+    ;; 如果满足条件, 生成拼音正则并返回, 否则使用 evil 自带正则.
+    (if (and my/pinyin-search-enabled                           ;; 如果开启了拼音搜索功能
+             (>= (length string) my/pinyin-search-min-length)   ;; 长度检查
+             (string-match-p "\\`[a-z]+\\'" string))            ;; 纯小写检查
+        ;; 满足条件时，返回与原始函数相同结构的列表 (list regex case-fold whole)
+        (let* ((regex (my/pinyin-search--build string)))        ;; *核心代码*: 用 pyim 构建 regex: pattern 并返回 (list regex case-fold whole)
+          ;; (message (propertize "[pinyin]" 'face '(:foreground "DarkGreen")))
+          (list regex case-fold whole))                         ;; 似乎不需要显示调用 (funcall orig string whole case-fold)
+      ;; pinyin-search 未开启 or 长度不满足 or 不是小写字母, 直接调用原始函数
+      (funcall orig string whole case-fold)))
+
+  (with-eval-after-load 'evil-ex
+    (advice-add 'evil-ex-make-pattern :around #'my/evil-ex-make-pattern--pinyin))
+
+  (global-set-key (kbd "C-c m t p") #'my/toggle-pinyin-search)  ;; C-c m is My prefix, t for toggle, p for pinyin-search.
+
+  ;; ____________________________ Emphasis
   ;; The variable org-emphasis-alist is not defined until org-mode is loaded
   ;; See https://emacs.stackexchange.com/questions/44081/how-to-tweak-org-emphasis-alist-to-put-e-g-neon-yellow-over-bold-or-italic
   (add-to-list 'org-emphasis-alist
                '("*" (bold :foreground "LightGoldenrod1")))
-
-  ;; ;; ____________________________ Config babel
-  ;; (org-babel-do-load-languages
-  ;;  'org-babel-load-languages
-  ;;  '((sh . t)))
 
 )  ;; ______________________________ End of user-config()
 
@@ -845,9 +872,44 @@ This function is called at the very end of Spacemacs initialization."
                   ("convert -density %D -trim -antialias %f -quality 100 %O"))))
  '(org-startup-with-inline-images nil)
  '(package-selected-packages
-   '(add-node-modules-path company-web web-completion-data counsel-css flycheck pkg-info epl helm-css-scss helm helm-core impatient-mode simple-httpd prettier-js web-beautify undo-tree queue spinner magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
+   '(gnu-elpa-keyring-update add-node-modules-path company-web web-completion-data counsel-css flycheck pkg-info epl helm-css-scss helm helm-core impatient-mode simple-httpd prettier-js web-beautify undo-tree queue spinner magit-section compat shrink-path fcitx org-fragtog org-elp web-mode tagedit slim-mode scss-mode sass-mode pug-mode haml-mode emmet-mode org-preview-html company yasnippet cdlatex json-mode dash-functional anaconda-mode pythonic evil-vimish-fold vimish-fold yaml-mode vimrc-mode phi-rectangle rectangle-utils edit-indirect auto-complete-auctex company-auctex auto-completion-auctex auctex doom-modeline ewal-doom-themes doom-acario-dark-theme doom-solarized-dark-theme doom-material-theme doom-dark+-theme doom-theme doom-themes-theme spaceline-all-the-icons all-the-icons org-category-capture alert log4e gntp markdown-mode magit-popup gitignore-mode magit git-commit with-editor transient ivy-posframe packed wgrep smex ivy-hydra counsel-projectile counsel swiper ivy yapfify ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smeargle restart-emacs rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint indent-guide imenu-list hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish define-word cython-mode company-statistics company-anaconda column-enforce-mode cnfonts clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))
  '(safe-local-variable-values
-   '((eval font-lock-add-keywords nil
+   '((eval load-file
+           (expand-file-name "log.el"
+                             (file-name-directory
+                              (or load-file-name buffer-file-name))))
+     (eval progn
+           (font-lock-add-keywords nil
+                                   '(("\\<Buy\\>" 0
+                                      '(:foreground "red" :weight bold)
+                                      t))
+                                   'append)
+           (font-lock-add-keywords nil
+                                   '(("\\<Sell\\>" 0
+                                      '(:foreground "green" :weight bold)
+                                      t))
+                                   'append)
+           (font-lock-add-keywords nil
+                                   '((ek/match-pos-decimal 1 'pos-decimal-face t))
+                                   'append)
+           (font-lock-add-keywords nil
+                                   '((ek/match-neg-dicimal 1 'neg-decimal-face t))
+                                   'append)
+           (font-lock-add-keywords nil
+                                   '((ek/match-integer 1 'integer-face t))
+                                   'append))
+     (eval progn
+           (font-lock-add-keywords nil
+                                   '((ek/match-pos-decimal 1 'pos-decimal-face t))
+                                   'append)
+           (font-lock-add-keywords nil
+                                   '((ek/match-neg-dicimal 1 'neg-decimal-face t))
+                                   'append)
+           (font-lock-add-keywords nil
+                                   '((ek/match-integer 1 'integer-face t))
+                                   'append)
+           (font-lock-flush))
+     (eval font-lock-add-keywords nil
            '(("\\(| [0-9-]+ | [0-9:]+ | [^|]+ | \\)B\\( |\\)" 3
               '(:foreground "red")
               prepend)
@@ -865,6 +927,7 @@ This function is called at the very end of Spacemacs initialization."
             ".assets"))))
  '(smtpmail-smtp-server "smtp.qq.com")
  '(smtpmail-smtp-service 25)
+ '(warning-suppress-types '((use-package)))
  '(yaml-indent-offset 4))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
