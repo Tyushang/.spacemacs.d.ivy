@@ -338,20 +338,16 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
-  ;; ;; ________________________________ PinYin Search ____________________________
-  ;; ;; 让 / 使用 isearch 后端（务必在 pyim 之前设置）
-  ;; (setq evil-search-module 'isearch)
-
   ;; ______________________________Set Proxy____________________________________
   ;; (setq url-gateway-method 'socks)
   ;; (setq socks-server '("Default server" "127.0.0.1" 1080 5))
 
-  ;; (setq url-proxy-services
-  ;;       '(("https" . "127.0.0.1:12333")
-  ;;         ("http"  . "127.0.0.1:12333")
-  ;;         ;; socks not working, @see url-default-find-proxy-for-url
-  ;;         ;; ("socks5" . "localhost:1080")
-  ;;         ))
+  (setq url-proxy-services
+        '(("https" . "127.0.0.1:12333")
+          ("http"  . "127.0.0.1:12333")
+          ;; socks not working, @see url-default-find-proxy-for-url
+          ;; ("socks5" . "localhost:1080")
+          ))
   ;; ___________________________Set ELPA Source_________________________________
   ;; 如果是 spacemacs/master 分支, 设置变量 configuration-layer--elpa-archives
   ;; 如果是 spacemacs/develop 分支, 使用 configuration-layer-elpa-archives 代替原来的 configuration-layer--elpa-archives （ -- 换成 - ）
@@ -431,6 +427,7 @@ you should place your code here."
   (setq shell-file-name "C:\\Program Files\\Git\\bin\\bash.exe")
   (setq explicit-shell-file-name shell-file-name)
   (setq explicit-bash.exe-args '("--login" "-i"))
+  ;; 设置 GPG Program: epg-gpg-program
   (let ((dir "C:/Program Files/Git/usr/bin"))
     (add-to-list 'exec-path dir)
     (setenv "PATH" (concat dir ";" (getenv "PATH")))
@@ -610,8 +607,13 @@ you should place your code here."
               ))
 
   ;; ________________________ Image Paste Function
+  (defvar my/cmdproxy-path (or (executable-find "cmdproxy.exe")
+                               (error "[ERROR] Could not find cmdproxy.exe in exec-path. Please check your Emacs installation and exec-path variable."))
+    "函数 my/save-clipboard-image 必须用 cmdproxy.exe(shell-file-name 的默认值) 来调用 Powershell, 不能用 git bash 来调用, 否则会报错.")
+
   (defun my/save-clipboard-image (savepath)
-  (let* ((command (format "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;
+    (let* ((shell-file-name my/cmdproxy-path))
+      (let* ((command (format "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;
             if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {
                 $image = [System.Windows.Forms.Clipboard]::GetImage();
                 [System.Drawing.Bitmap]$image.Save('%s', [System.Drawing.Imaging.ImageFormat]::Png);
@@ -623,12 +625,12 @@ you should place your code here."
             } else {
                 Write-Output '-1'
             }\"" savepath savepath))
-         (output (string-trim (shell-command-to-string command))))
-    (cond
-     ((string= output "0") (progn (message "Clipboard image saved as %s" savepath) 0))
-     ((string= output "-1") (progn (message "No image in clipboard.") -1))
-     ((string= output "-2") (progn (message "Write image error.") -2))
-     (t (progn (message "Unknown error: %s" output) -3)))))
+             (output (string-trim (shell-command-to-string command))))
+        (cond
+         ((string= output "0") (progn (message "Clipboard image saved as %s" savepath) 0))
+         ((string= output "-1") (progn (message "No image in clipboard.") -1))
+         ((string= output "-2") (progn (message "Write image error.") -2))
+         (t (progn (message "Unknown error: %s" output) -3))))))
 
   (setq org-download-screenshot-method 'my/save-clipboard-image)
 
@@ -655,6 +657,7 @@ If `basename' is empty, generate a default name."
   (global-set-key (kbd "C-c m i d") 'org-download-delete)   ;; C-c m is My prefix, i for image, d for delete.
 
   ;; ____________________________ PinYin Search
+  ;; FUCK! DONT Use Tencent Source to install pyim / pyim-cregexp(请使用官方源安装). There's BUG. CANNOT WORK PROPERLY(也许版本不一样, 接口有变化).
   (use-package pyim :ensure t)
   (use-package pyim-cregexp
     :after pyim
